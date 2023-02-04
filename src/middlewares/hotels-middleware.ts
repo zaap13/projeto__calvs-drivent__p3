@@ -26,9 +26,19 @@ export async function hotelsValidator(req: AuthenticatedRequest, res: Response, 
       return res.sendStatus(httpStatus.NOT_FOUND);
     }
 
-    const { Ticket } = enrollment;
+    const ticket = await prisma.ticket.findFirst({
+      where: {
+        enrollmentId: enrollment.id,
+      },
+      include: {
+        TicketType: true,
+      },
+    });
 
-    if (!Ticket) {
+    if (!ticket) {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+    if (ticket.status !== 'PAID' || ticket.TicketType.includesHotel !== true || ticket.TicketType.isRemote === true) {
       return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
     }
 

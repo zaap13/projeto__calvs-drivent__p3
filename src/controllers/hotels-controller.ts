@@ -10,7 +10,7 @@ export async function getRooms(req: AuthenticatedRequest, res: Response) {
 
     return res.status(httpStatus.OK).send(hotelRooms);
   } catch (error) {
-    return res.sendStatus(httpStatus.NO_CONTENT);
+    return res.sendStatus(httpStatus.NOT_FOUND);
   }
 }
 
